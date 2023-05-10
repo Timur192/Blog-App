@@ -18,7 +18,9 @@ function page() {
   const { user, userData, loading, getUserProfile } = useContext(GlobalContext);
   const router = useRouter();
 
-  if (!user) return router.push("/");
+  useEffect(() => {
+    if (!user) return router.push("/")
+  },[])
 
   const notify = (text: string) => toast.success(text);
   const errorNotify = (text: string) => toast.error(text);
@@ -86,7 +88,6 @@ function page() {
   return (
     <div className="flex w-full h-screen items-center flex-col">
       <Toaster position="top-right" />
-      {user ? <></> : <></>}
       {!loading ? (
         <>
           <div className="mt-16 w-72 sm:mt-10 sm:w-96 rounded-md bg-gray-200">
