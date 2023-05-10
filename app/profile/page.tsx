@@ -4,7 +4,6 @@ import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { GlobalContext } from "@/context/context";
 import { supabase } from "@/supabase/supabaseClient";
-import { useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,11 +15,6 @@ function page() {
   const [image, setImage] = useState<File | null>(null);
   const [ButtonLoading, setButtonLoading] = useState(false);
   const { user, userData, loading, getUserProfile } = useContext(GlobalContext);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user) return router.push("/")
-  },[])
 
   const notify = (text: string) => toast.success(text);
   const errorNotify = (text: string) => toast.error(text);
