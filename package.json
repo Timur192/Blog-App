@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.21.0",
     "@types/node": "20.1.0",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.4",
@@ -17,7 +18,12 @@
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.4.1",
     "tailwindcss": "3.3.2",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/uniqid": "^5.3.2"
   }
 }
