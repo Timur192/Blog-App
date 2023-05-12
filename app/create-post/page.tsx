@@ -7,10 +7,18 @@ import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import uniqid from "uniqid";
 
+interface IForm {
+  title: string,
+  description: string,
+  imgUrl: string
+}
+
 function CreatePost() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [imgUrl, setImgUrl] = useState("");
+  const [form, setForm] = useState<IForm>({
+    title: '',
+    description: '',
+    imgUrl: ''
+  });
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const { user, setShowModal } = useContext(GlobalContext);
@@ -19,13 +27,13 @@ function CreatePost() {
   const errorNotify = (text: string) => toast.error(text);
 
   useEffect(() => {
-    if (imgUrl) {
+    if (form.imgUrl) {
       const CreateNewPost = async () => {
         const { error } = await supabase.from("posts").insert({
-          title: title,
-          description: description,
+          title: form.title,
+          description: form.description,
           author: user?.id,
-          imgUrl: imgUrl,
+          imgUrl: form.imgUrl,
           create_date: `${new Date().toDateString()}`,
         });
 
@@ -33,14 +41,12 @@ function CreatePost() {
 
         notify("Successful post creation");
         setLoading(false);
-        setTitle("");
-        setDescription("");
-        setImgUrl("");
+        setForm({title: '', description: '', imgUrl: ''})
         setImage(null);
       };
       CreateNewPost();
     }
-  }, [imgUrl]);
+  }, [form.imgUrl]);
 
   const UploadImage = async () => {
     setLoading(true);
@@ -55,7 +61,7 @@ function CreatePost() {
           .from("images")
           .getPublicUrl(uploadData.path);
 
-        setImgUrl(data.publicUrl);
+        setForm(prev => ({...prev, imgUrl: data.publicUrl}));
       }
     } else {
       errorNotify("Please select image");
@@ -92,8 +98,8 @@ function CreatePost() {
                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                       <input
                         type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        value={form.title}
+                        onChange={(e) => setForm((prev) => ({...prev, title: e.target.value}))}
                         className="block outline-none w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         placeholder="Title"
                       />
@@ -109,8 +115,8 @@ function CreatePost() {
                   </label>
                   <div className="mt-2">
                     <textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
+                      value={form.description}
+                      onChange={(e) => setForm((prev) => ({...prev, description: e.target.value}))}
                       rows={3}
                       className="block outline-none w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       defaultValue={""}
